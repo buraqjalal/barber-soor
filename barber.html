@@ -1,0 +1,138 @@
+<meta name='viewport' content='width=device-width, initial-scale=1'/><!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SWR Luxury | Soor Mode</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;500;800&family=Noto+Sans+Arabic:wght@300;600&display=swap');
+        
+        body { font-family: 'Tajawal', sans-serif; transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1); overflow-x: hidden; }
+
+        @keyframes rotateOnce {
+            0% { transform: rotate(0deg) scale(0); opacity: 0; }
+            100% { transform: rotate(360deg) scale(1); opacity: 1; }
+        }
+        .rotate-in { animation: rotateOnce 1.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+
+        .dark-mode { background-color: #050505; color: #ffffff; }
+        .light-mode { background-color: #f8fafc; color: #1e293b; }
+        .soor-mode { background-color: #450a0a; color: #fecaca; }
+        
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 28px;
+        }
+
+        #splash { background: radial-gradient(circle, #1a1a1a 0%, #000 100%); transition: 1.2s ease-in-out; }
+        
+        .fade-in-up { animation: fadeInUp 1s ease forwards; opacity: 0; }
+        @keyframes fadeInUp { from { transform: translateY(40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    </style>
+</head>
+<body class="dark-mode">
+
+    <div id="splash" class="fixed inset-0 z-[100] flex items-center justify-center flex-col">
+        <div class="text-red-600 mb-6 text-6xl animate-pulse"><i class="fas fa-scissors"></i></div>
+        <h1 class="text-white text-4xl font-black mb-12 tracking-[0.2em]">SOOR BARBER</h1>
+        <div class="flex flex-col gap-4 w-72">
+            <button onclick="startApp('ar')" class="py-4 glass text-white hover:bg-red-700 transition">العربية</button>
+            <button onclick="startApp('ku')" class="py-4 glass text-white hover:bg-red-700 transition">کوردی سورانی</button>
+            <button onclick="startApp('en')" class="py-4 glass text-white hover:bg-red-700 transition">English</button>
+        </div>
+    </div>
+
+    <div id="app" class="hidden">
+        <nav class="p-6 flex justify-between items-center">
+            <div class="text-3xl font-black text-yellow-500 transition-colors duration-500" id="logo">SOOR.</div>
+            <div class="flex gap-2">
+                <button onclick="changeMode('light')" class="w-10 h-10 glass flex items-center justify-center"><i class="fas fa-sun text-orange-400"></i></button>
+                <button onclick="changeMode('dark')" class="w-10 h-10 glass flex items-center justify-center"><i class="fas fa-moon text-blue-400"></i></button>
+                <button onclick="changeMode('soor')" class="w-10 h-10 glass flex items-center justify-center border-red-500"><i class="fas fa-fire text-red-500"></i></button>
+            </div>
+        </nav>
+
+        <header class="flex flex-col items-center mt-8 text-center">
+            <div class="relative group">
+                <div id="glow" class="absolute inset-0 bg-yellow-500 rounded-full blur-2xl opacity-20 transition-all"></div>
+                <img id="profileImg" src="https://i.imgur.com/zfHGwOf.jpeg" 
+                     class="w-44 h-44 rounded-full object-cover border-4 border-yellow-500 shadow-2xl">
+            </div>
+            
+            <h2 id="txt-name" class="text-4xl font-extrabold mt-8 fade-in-up">أسكه آكو</h2>
+            <p id="txt-title" class="text-yellow-500 tracking-[0.3em] font-light mt-2 fade-in-up" style="animation-delay: 0.2s;">SOOR LUXURY BARBER</p>
+
+            <div class="flex gap-6 mt-8 fade-in-up" style="animation-delay: 0.4s;">
+                <a href="https://instagram.com/ako_kako" class="text-2xl hover:scale-125 transition-transform"><i class="fab fa-instagram"></i></a>
+                <a href="https://www.facebook.com/share/1M5VGUhoiW/" class="text-2xl hover:scale-125 transition-transform"><i class="fab fa-facebook"></i></a>
+                <a href="https://wa.me/9647703637218" class="text-2xl hover:scale-125 transition-transform text-green-500"><i class="fab fa-whatsapp"></i></a>
+            </div>
+        </header>
+
+        <section class="max-w-md mx-auto p-6 mt-10 fade-in-up" style="animation-delay: 0.6s;">
+            <div class="glass p-8 shadow-2xl">
+                <h3 id="txt-book-head" class="text-2xl font-bold mb-8 text-center">حجز موعد VIP</h3>
+                <div class="space-y-4">
+                    <input type="text" id="fullName" placeholder="الاسم الثلاثي" class="w-full bg-black/20 p-4 rounded-2xl outline-none border border-white/10 focus:border-red-500">
+                    <input type="datetime-local" id="bookDate" class="w-full bg-black/20 p-4 rounded-2xl outline-none border border-white/10 focus:border-red-500">
+                    <button id="btn-send" onclick="sendWhatsApp()" class="w-full py-5 bg-yellow-600 text-white rounded-2xl font-bold hover:tracking-widest transition-all duration-500 shadow-xl">
+                        تأكيد عبر واتساب <i class="fab fa-whatsapp ml-2"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        const translations = {
+            ar: { name: "أسكه آكو", title: "حلاق سوور الفاخر", bookHead: "حجز موعد VIP", namePlaceholder: "الاسم الثلاثي", btn: "تأكيد عبر واتساب", dir: "rtl" },
+            ku: { name: "ئەسکە ئاکۆ", title: "سەرتاشخانەی سوور", bookHead: "بڕینی نۆره‌ی VIP", namePlaceholder: "ناوی سیانی", btn: "ناردن بۆ واتسئاپ", dir: "rtl" },
+            en: { name: "Ako Kako", title: "SOOR LUXURY BARBER", bookHead: "Book VIP Appointment", namePlaceholder: "Full Name", btn: "Confirm via WhatsApp", dir: "ltr" }
+        };
+
+        function startApp(lang) {
+            // تطبيق الترجمة
+            const data = translations[lang];
+            document.getElementById('txt-name').innerText = data.name;
+            document.getElementById('txt-title').innerText = data.title;
+            document.getElementById('txt-book-head').innerText = data.bookHead;
+            document.getElementById('fullName').placeholder = data.namePlaceholder;
+            document.getElementById('btn-send').innerHTML = `${data.btn} <i class="fab fa-whatsapp ml-2"></i>`;
+            document.documentElement.dir = data.dir;
+
+            // إخفاء الشاشة
+            const splash = document.getElementById('splash');
+            splash.style.opacity = '0';
+            splash.style.transform = 'scale(1.2)';
+            setTimeout(() => {
+                splash.style.display = 'none';
+                const app = document.getElementById('app');
+                app.classList.remove('hidden');
+                setTimeout(() => {
+                    app.style.opacity = '1';
+                    document.getElementById('profileImg').classList.add('rotate-in');
+                }, 50);
+            }, 1000);
+        }
+
+        function changeMode(mode) {
+            const body = document.body;
+            body.classList.remove('dark-mode', 'light-mode', 'soor-mode');
+            if(mode === 'light') body.classList.add('light-mode');
+            else if(mode === 'soor') body.classList.add('soor-mode');
+            else body.classList.add('dark-mode');
+        }
+
+        function sendWhatsApp() {
+            const name = document.getElementById('fullName').value;
+            const date = document.getElementById('bookDate').value;
+            if(!name || !date) return alert("Please fill details!");
+            window.open(`https://wa.me/9647703637218?text=New Booking:%0AName: ${name}%0ADate: ${date}`, '_blank');
+        }
+    </script>
+</body>
+</html>
